@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Search from "./Search";
 import Logo from "./Logo";
-import NumResults from "./NumResults";
 
 function Navbar({ children }) {
     const [query, setQuery] = useState("");
