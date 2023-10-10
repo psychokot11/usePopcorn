@@ -7,7 +7,6 @@ import MovieList from "./components/list-box/MovieList";
 import WatchedSummary from "./components/watched-box/WatchedSummary";
 import WatchedMoviesList from "./components/watched-box/WatchedMoviesList";
 
-
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -65,15 +64,16 @@ export default function App() {
         <NumResults movies={movies} />
       </Navbar>
 
-      <Main> 
-        <Box>
-          <MovieList movies={movies} />
-        </Box>
-        
-        <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} />
-        </Box>
+      <Main>
+        <Box element={<MovieList movies={movies} />} />
+        <Box
+          element={
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList watched={watched} />
+            </>
+          }
+        />
       </Main>
     </>
   );
