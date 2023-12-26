@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import Search from "./Search";
 import Logo from "./Logo";
 
-function Navbar({ children }) {
-    const [query, setQuery] = useState("");
-
+function Navbar({ query, setQuery, children }) {
     return (
         <nav className="nav-bar">
           <Logo />
