@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./components/navbar/Navbar";
 import NumResults from "./components/navbar/NumResults";
 import Main from "./components/main/Main";
@@ -6,6 +6,8 @@ import Box from "./components/box/Box";
 import MovieList from "./components/list-box/MovieList";
 import WatchedSummary from "./components/watched-box/WatchedSummary";
 import WatchedMoviesList from "./components/watched-box/WatchedMoviesList";
+import Loader from "./components/common/Loader";
+import ErrorMessage from "./components/common/ErrorMessage";
 
 const tempMovieData = [
   {
@@ -57,6 +59,38 @@ const tempWatchedData = [
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const query = "interstellar";
+
+  const KEY = "f84fc31d"
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=${KEY}`);
+
+        if (!res.ok) {
+          throw new Error("Something went wrong");
+        }
+
+        const data = await res.json();
+        if (data.Response === "False") {
+          throw new Error("Movie not found");
+        }
+        setMovies(data.Search);
+    
+      } catch (err) {
+        console.error(err.message)
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+      
+    }
+    fetchMovies();
+  }, []);
 
   return (
     <>
@@ -65,7 +99,13 @@ export default function App() {
       </Navbar>
 
       <Main>
-        <Box element={<MovieList movies={movies} />} />
+        <Box 
+          element={
+            isLoading 
+            ? <Loader /> 
+            : error 
+              ? <ErrorMessage message={error}/>
+              : <MovieList movies={movies} />} />
         <Box
           element={
             <>
