@@ -6,6 +6,7 @@ import Box from "./components/box/Box";
 import MovieList from "./components/list-box/MovieList";
 import WatchedSummary from "./components/watched-box/WatchedSummary";
 import WatchedMoviesList from "./components/watched-box/WatchedMoviesList";
+import MovieDetails from "./components/watched-box/MovieDetails";
 import Loader from "./components/common/Loader";
 import ErrorMessage from "./components/common/ErrorMessage";
 
@@ -13,10 +14,11 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const KEY = "f84fc31d"
+  const KEY = "e58cb9d2"
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -53,6 +55,10 @@ export default function App() {
     fetchMovies();
   }, [query]);
 
+  const onCloseMovie = () => {
+    console.log("close movie");
+  }
+
   return (
     <>
       <Navbar query={query} setQuery={setQuery}>
@@ -66,14 +72,23 @@ export default function App() {
             ? <Loader /> 
             : error 
               ? <ErrorMessage message={error}/>
-              : <MovieList movies={movies} />} />
+              : <MovieList 
+                  movies={movies} 
+                  setSelectedId={setSelectedId} />} />
+
         <Box
           element={
-            <>
-              <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} />
-            </>
-          }
+            selectedId ? ( 
+              <MovieDetails 
+                apiKey={KEY}
+                selectedId={selectedId}
+                onCloseMovie={onCloseMovie}/> 
+            ) : (
+              <>
+                <WatchedSummary watched={watched} />
+                <WatchedMoviesList watched={watched} />
+              </>
+            )}
         />
       </Main>
     </>
