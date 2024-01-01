@@ -19,6 +19,20 @@ export default function App() {
   const [error, setError] = useState("");
 
   const KEY = "e58cb9d2"
+  
+  const closeMovie = () => {
+    setSelectedId(null);
+  }
+
+  const addWatchedMovie = (movie) => {
+    setWatched((watched) => [...watched, movie]);
+    closeMovie();
+  }
+
+  const deleteWatchedMovie = (id) => {
+    setWatched((watched) => watched.filter(movie => movie.imdbID !== id));
+    console.log(watched);
+  };
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -55,10 +69,6 @@ export default function App() {
     fetchMovies();
   }, [query]);
 
-  const onCloseMovie = () => {
-    console.log("close movie");
-  }
-
   return (
     <>
       <Navbar query={query} setQuery={setQuery}>
@@ -82,11 +92,15 @@ export default function App() {
               <MovieDetails 
                 apiKey={KEY}
                 selectedId={selectedId}
-                onCloseMovie={onCloseMovie}/> 
+                onAddWatchedMovie={addWatchedMovie}
+                onCloseMovie={closeMovie}
+                watched={watched}/> 
             ) : (
               <>
                 <WatchedSummary watched={watched} />
-                <WatchedMoviesList watched={watched} />
+                <WatchedMoviesList 
+                  watched={watched} 
+                  deleteWatchedMovie={deleteWatchedMovie}/>
               </>
             )}
         />
