@@ -31,7 +31,6 @@ export default function App() {
 
   const deleteWatchedMovie = (id) => {
     setWatched((watched) => watched.filter(movie => movie.imdbID !== id));
-    console.log(watched);
   };
 
   useEffect(() => {
