@@ -57,6 +57,20 @@ function MovieDetails({ apiKey, selectedId, onCloseMovie, onAddWatchedMovie, wat
         }
     }, [title])
 
+    useEffect(() => {
+        const closeMovie = (e) => {
+            if (e.key === 'Escape') {
+                onCloseMovie();
+            }
+        }
+        
+        document.addEventListener('keydown', closeMovie);
+
+        return () => {
+            document.removeEventListener('keydown', closeMovie);
+        }
+    }, [onCloseMovie])
+
     return (
         <div className="details">
             {isLoading ? <Loader /> : 
