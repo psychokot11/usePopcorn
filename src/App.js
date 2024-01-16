@@ -37,6 +37,7 @@ export default function App() {
     const controller = new AbortController();
     const fetchMovies = async () => {
       try {
+        closeMovie();
         setError("");
         setIsLoading(true);
         const res = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=${KEY}`,
