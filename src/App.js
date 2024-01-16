@@ -13,7 +13,7 @@ import ErrorMessage from "./components/common/ErrorMessage";
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(JSON.parse(localStorage.getItem("watched")));
   const [selectedId, setSelectedId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -80,6 +80,10 @@ export default function App() {
     }
 
   }, [query]);
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched])
 
   return (
     <>
