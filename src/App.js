@@ -9,14 +9,12 @@ import WatchedMoviesList from "./components/watched-box/WatchedMoviesList";
 import MovieDetails from "./components/watched-box/MovieDetails";
 import Loader from "./components/common/Loader";
 import ErrorMessage from "./components/common/ErrorMessage";
+import { useMovies } from "./custom-hooks/useMovies";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(JSON.parse(localStorage.getItem("watched")));
   const [selectedId, setSelectedId] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const KEY = "e58cb9d2"
   
@@ -33,53 +31,7 @@ export default function App() {
     setWatched((watched) => watched.filter(movie => movie.imdbID !== id));
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchMovies = async () => {
-      try {
-        closeMovie();
-        setError("");
-        setIsLoading(true);
-        const res = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=${KEY}`,
-        {
-          signal: controller.signal,
-        });
-
-        if (!res.ok) {
-          throw new Error("Something went wrong");
-        }
-
-        const data = await res.json();
-        if (data.Response === "False") {
-          throw new Error("Movie not found");
-        }
-        setMovies(data.Search);
-        setError("");
-
-      } catch (err) {
-        console.log(err.message);
-        if (err.name !== "AbortError") { 
-          setError(err.message);
-        }
-        
-      } finally {
-        setIsLoading(false);
-      }
-      
-    }
-
-    if (query.length < 3) {
-      setMovies([]);
-      setError("");
-      return;
-    }
-
-    fetchMovies();
-    return () => {
-      controller.abort();
-    }
-
-  }, [query]);
+  const { movies, isLoading, error } = useMovies(query, closeMovie);
 
   useEffect(() => {
     localStorage.setItem("watched", JSON.stringify(watched));
