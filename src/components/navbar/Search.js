@@ -4,6 +4,10 @@ import { useKey } from '../../custom-hooks/useKey';
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
+  useEffect(() => {
+    inputEl.current.focus();
+  }, [])
+
   useKey("Enter", function() {
     if (document.activeElement === inputEl.current) return;
       inputEl.current.focus();
