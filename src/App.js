@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "./components/navbar/Navbar";
 import NumResults from "./components/navbar/NumResults";
 import Main from "./components/main/Main";
@@ -10,10 +10,10 @@ import MovieDetails from "./components/watched-box/MovieDetails";
 import Loader from "./components/common/Loader";
 import ErrorMessage from "./components/common/ErrorMessage";
 import { useMovies } from "./custom-hooks/useMovies";
+import { useLocalStorageState } from "./custom-hooks/useLocalStorageState";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [watched, setWatched] = useState(JSON.parse(localStorage.getItem("watched")));
   const [selectedId, setSelectedId] = useState(null);
 
   const KEY = "e58cb9d2"
@@ -32,10 +32,7 @@ export default function App() {
   };
 
   const { movies, isLoading, error } = useMovies(query, closeMovie);
-
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched])
+  const [watched, setWatched] = useLocalStorageState([], "watched");
 
   return (
     <>
